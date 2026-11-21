@@ -23,9 +23,11 @@ jobs:
         with: {go-version: '1.25.x', cache: false}
       - run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends podman uidmap slirp4netns fuse-overlayfs netavark aardvark-dns
       - run: npm --prefix frontend ci --no-audit --no-fund
-      - name: Install browser
-        env: {PLAYWRIGHT_BROWSERS_PATH: "${{ runner.temp }}/ms-playwright"}
-        run: (cd frontend && npx playwright install --with-deps chromium)
+      - name: Install Chrome
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v1
+      - name: Bind Playwright to Chrome
+        run: echo "PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=${{ steps.setup-chrome.outputs.chrome-path }}" >> "$GITHUB_ENV"
       - run: bash scripts/ci-bootstrap-upstreams.sh "$RUNNER_TEMP/blastglass-upstreams"
       - run: cargo fetch --locked
       - run: bash scripts/suite-rust.sh
@@ -48,5 +50,4 @@ jobs:
           DREAM_MACHINE_SELECTION_REPORT: "${{ runner.temp }}/evidence-seed/seed/selection-report.json"
           DREAM_MACHINE_SELECTION_EVIDENCE: "${{ runner.temp }}/evidence-seed/seed/selection-evidence"
           BLASTGLASS_UPSTREAM_ROOT: "${{ runner.temp }}/blastglass-upstreams"
-          PLAYWRIGHT_BROWSERS_PATH: "${{ runner.temp }}/ms-playwright"
         run: node scripts/dream-machine-publication-gate.mjs --check . "$RUNNER_TEMP/ci-evidence"
