@@ -2,7 +2,7 @@
 set -euo pipefail
 root=$(cd "$(dirname "$0")/.." && pwd); runtime="$root/.runtime"; mkdir -p "$runtime" "$root/var/blastglass"
 "$root/scripts/stop.sh" >/dev/null 2>&1 || true
-export PATH=/home/ruv/.cargo/bin:/usr/bin:$PATH PLAYWRIGHT_BROWSERS_PATH=/home/ruv/.cache/ms-playwright
+export PATH="$HOME/.cargo/bin:/usr/bin:$PATH" PLAYWRIGHT_BROWSERS_PATH="${PLAYWRIGHT_BROWSERS_PATH:-${XDG_CACHE_HOME:-$HOME/.cache}/ms-playwright}"
 export PORT=${BLASTGLASS_PORT:-8787} BLASTGLASS_DATA_PATH=${BLASTGLASS_DATA_PATH:-$root/var/blastglass/evidence.jsonl}
 export BLASTGLASS_RUVECTOR_CMD="$root/scripts/upstream-runtime/run.sh ruvector"
 export BLASTGLASS_FANN_CMD="$root/scripts/upstream-runtime/run.sh fann"
