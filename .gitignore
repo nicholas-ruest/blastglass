@@ -1,7 +1,10 @@
-.dm-private/
-target/
-**/node_modules/
-frontend/dist/
-playwright-report/
-test-results/
+/target/
+/frontend/node_modules/
+/frontend/dist/
+/frontend/test-results/
+/frontend/playwright-report/
+/.runtime/
+/.evidence/
+/var/
+/.dm-private/
 *.tsbuildinfo

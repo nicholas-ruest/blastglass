@@ -1,0 +1,10 @@
+[package]
+name = "blastglass-upstream-opa"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+blastglass-kernel = { path = "../blastglass-kernel" }
+serde.workspace = true
+thiserror.workspace = true

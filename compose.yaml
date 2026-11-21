@@ -1,0 +1,21 @@
+services:
+  blastglass:
+    build:
+      context: .
+      dockerfile: Containerfile
+    ports: ["8787:8080"]
+    volumes:
+      - blastglass-data:/data
+      - ${BLASTGLASS_UPSTREAM_ROOT:?exact-pinned upstream root required}:/upstreams:ro
+    environment:
+      BLASTGLASS_RUVECTOR_CMD: /app/scripts/upstream-runtime/run.sh ruvector
+      BLASTGLASS_FANN_CMD: /app/scripts/upstream-runtime/run.sh fann
+      BLASTGLASS_MIDSTREAM_CMD: /app/scripts/upstream-runtime/run.sh midstream
+      BLASTGLASS_QUDAG_CMD: /app/scripts/upstream-runtime/run.sh qudag
+      BLASTGLASS_FEDERATION_CMD: /app/scripts/upstream-runtime/run.sh federation
+      BLASTGLASS_OPA_CMD: /app/scripts/upstream-runtime/run.sh opa
+      BLASTGLASS_NATS_CMD: /app/scripts/upstream-runtime/run.sh nats
+    security_opt: ["no-new-privileges"]
+    cap_drop: ["ALL"]
+volumes:
+  blastglass-data: {}

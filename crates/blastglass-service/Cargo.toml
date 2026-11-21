@@ -1,0 +1,46 @@
+[package]
+name = "blastglass-service"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+blastglass-kernel = { path = "../blastglass-kernel" }
+serde.workspace = true
+thiserror.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true
+axum.workspace = true
+tokio.workspace = true
+tower.workspace = true
+tower-http.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+uuid.workspace = true
+blastglass-scenario = { path = "../blastglass-scenario" }
+blastglass-identity = { path = "../blastglass-identity" }
+blastglass-authorization = { path = "../blastglass-authorization" }
+blastglass-validation = { path = "../blastglass-validation" }
+blastglass-correlation = { path = "../blastglass-correlation" }
+blastglass-deadline = { path = "../blastglass-deadline" }
+blastglass-observability = { path = "../blastglass-observability" }
+blastglass-risk = { path = "../blastglass-risk" }
+blastglass-telemetry = { path = "../blastglass-telemetry" }
+blastglass-evidence = { path = "../blastglass-evidence" }
+blastglass-audit = { path = "../blastglass-audit" }
+blastglass-persistence = { path = "../blastglass-persistence" }
+blastglass-replay = { path = "../blastglass-replay" }
+blastglass-scheduler = { path = "../blastglass-scheduler" }
+blastglass-orchestration = { path = "../blastglass-orchestration" }
+blastglass-upstream-ruvector = { path = "../blastglass-upstream-ruvector" }
+blastglass-upstream-fann = { path = "../blastglass-upstream-fann" }
+blastglass-upstream-midstream = { path = "../blastglass-upstream-midstream" }
+blastglass-upstream-qudag = { path = "../blastglass-upstream-qudag" }
+blastglass-upstream-federation = { path = "../blastglass-upstream-federation" }
+blastglass-upstream-opa = { path = "../blastglass-upstream-opa" }
+blastglass-upstream-nats = { path = "../blastglass-upstream-nats" }
+blastglass-api-schema = { path = "../blastglass-api-schema" }
+
+[[bin]]
+name = "blastglass-service"
+path = "src/main.rs"

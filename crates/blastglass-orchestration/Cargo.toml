@@ -1,0 +1,20 @@
+[package]
+name = "blastglass-orchestration"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+blastglass-kernel = { path = "../blastglass-kernel" }
+serde.workspace = true
+thiserror.workspace = true
+blastglass-scenario = { path = "../blastglass-scenario" }
+blastglass-identity = { path = "../blastglass-identity" }
+blastglass-authorization = { path = "../blastglass-authorization" }
+blastglass-validation = { path = "../blastglass-validation" }
+blastglass-correlation = { path = "../blastglass-correlation" }
+blastglass-deadline = { path = "../blastglass-deadline" }
+blastglass-observability = { path = "../blastglass-observability" }
+blastglass-risk = { path = "../blastglass-risk" }
+blastglass-telemetry = { path = "../blastglass-telemetry" }
+blastglass-scheduler = { path = "../blastglass-scheduler" }
