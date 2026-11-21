@@ -2,7 +2,7 @@
 set -euo pipefail
 slug=${1:?upstream slug required}
 root=${BLASTGLASS_UPSTREAM_ROOT:?exact-pinned upstream root required}
-export CARGO_TARGET_DIR=${BLASTGLASS_UPSTREAM_TARGET:-/home/ruv/.cache/blastglass-upstream-target}
+export CARGO_TARGET_DIR=${BLASTGLASS_UPSTREAM_TARGET:-${XDG_CACHE_HOME:-$HOME/.cache}/blastglass-upstream-target}
 verify(){ test -d "$root/$1/.git"; test "$(git -C "$root/$1" rev-parse HEAD)" = "$2"; }
 case "$slug" in
   ruvector) verify ruvector 979c31acc57b970c1a7e0771ed527c1703c137e8; cargo test --quiet --manifest-path "$root/ruvector/Cargo.toml" -p ruvector-core --test filtered_search -- --nocapture >/dev/null; echo similarity_set ;;

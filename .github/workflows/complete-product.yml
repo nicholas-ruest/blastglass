@@ -23,27 +23,30 @@ jobs:
         with: {go-version: '1.25.x', cache: false}
       - run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends podman uidmap slirp4netns fuse-overlayfs netavark aardvark-dns
       - run: npm --prefix frontend ci --no-audit --no-fund
-      - run: (cd frontend && npx playwright install --with-deps chromium)
+      - name: Install browser
+        env: {PLAYWRIGHT_BROWSERS_PATH: "${{ runner.temp }}/ms-playwright"}
+        run: (cd frontend && npx playwright install --with-deps chromium)
       - run: bash scripts/ci-bootstrap-upstreams.sh "$RUNNER_TEMP/blastglass-upstreams"
+      - run: cargo fetch --locked
       - run: bash scripts/suite-rust.sh
       - run: bash scripts/suite-frontend.sh
       - name: Rust source floor
         run: node scripts/dream-machine-rust-share.mjs .
       - name: Fetch exact-source external evidence
-        env: {EVIDENCE_URL: "${{ vars.DREAM_MACHINE_EVIDENCE_URL }}"}
+        env: {EVIDENCE_URL: "https://github.com/${{ github.repository }}/releases/download/evidence-${{ github.event.pull_request.head.sha || github.sha }}/blastglass-evidence-${{ github.event.pull_request.head.sha || github.sha }}.tgz"}
         run: |
           test -n "$EVIDENCE_URL"
-          curl --fail --location "$EVIDENCE_URL" -o evidence.tgz
-          mkdir evidence-seed
-          tar -xzf evidence.tgz -C evidence-seed
-          test -f evidence-seed/seed/semantic-review.md
-          test -f evidence-seed/seed/selection-report.json
+          curl --fail --location "$EVIDENCE_URL" -o "$RUNNER_TEMP/evidence.tgz"
+          mkdir "$RUNNER_TEMP/evidence-seed"
+          tar -xzf "$RUNNER_TEMP/evidence.tgz" -C "$RUNNER_TEMP/evidence-seed"
+          test -f "$RUNNER_TEMP/evidence-seed/seed/semantic-review.md"
+          test -f "$RUNNER_TEMP/evidence-seed/seed/selection-report.json"
       - name: Pinned complete-product controller
         env:
-          DREAM_MACHINE_PRODUCER_RUN_ID: "${{ vars.DREAM_MACHINE_PRODUCER_RUN_ID }}"
-          DREAM_MACHINE_SEMANTIC_REVIEW: "${{ github.workspace }}/evidence-seed/seed/semantic-review.md"
-          DREAM_MACHINE_SELECTION_REPORT: "${{ github.workspace }}/evidence-seed/seed/selection-report.json"
-          DREAM_MACHINE_SELECTION_EVIDENCE: "${{ github.workspace }}/evidence-seed/seed/selection-evidence"
+          DREAM_MACHINE_PRODUCER_RUN_ID: "${{ github.run_id }}"
+          DREAM_MACHINE_SEMANTIC_REVIEW: "${{ runner.temp }}/evidence-seed/seed/semantic-review.md"
+          DREAM_MACHINE_SELECTION_REPORT: "${{ runner.temp }}/evidence-seed/seed/selection-report.json"
+          DREAM_MACHINE_SELECTION_EVIDENCE: "${{ runner.temp }}/evidence-seed/seed/selection-evidence"
           BLASTGLASS_UPSTREAM_ROOT: "${{ runner.temp }}/blastglass-upstreams"
           PLAYWRIGHT_BROWSERS_PATH: "${{ runner.temp }}/ms-playwright"
-        run: mkdir ci-evidence && node scripts/dream-machine-publication-gate.mjs --check . ci-evidence
+        run: node scripts/dream-machine-publication-gate.mjs --check . "$RUNNER_TEMP/ci-evidence"
