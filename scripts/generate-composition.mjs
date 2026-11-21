@@ -5,7 +5,7 @@ const sha=execFileSync("git",["rev-parse","HEAD"],{encoding:"utf8"}).trim();
 const hash=p=>createHash("sha256").update(readFileSync(p)).digest("hex");
 const names=readdirSync("crates").filter(n=>n.startsWith("blastglass-")).sort();
 const manifests=names.map(n=>`crates/${n}/Cargo.toml`); const service="crates/blastglass-service/Cargo.toml";
-const caller=n=>n==="blastglass-service"?"crates/blastglass-service/src/main.rs":n.startsWith("blastglass-upstream-")||["blastglass-audit","blastglass-persistence","blastglass-replay","blastglass-api-schema","blastglass-kernel","blastglass-orchestration"].includes(n)?"crates/blastglass-service/src/app.rs":"crates/blastglass-orchestration/src/lib.rs";
+const caller=n=>n==="blastglass-service"?"crates/blastglass-service/src/main.rs":n.startsWith("blastglass-upstream-")||["blastglass-evidence","blastglass-audit","blastglass-persistence","blastglass-replay","blastglass-api-schema","blastglass-kernel","blastglass-orchestration"].includes(n)?"crates/blastglass-service/src/app.rs":"crates/blastglass-orchestration/src/lib.rs";
 const adrs=readdirSync("docs/adr").filter(n=>/^\d+\.md$/.test(n)).sort(); const ddds=readdirSync("docs/ddd").filter(n=>/^\d.*\.md$/.test(n)).sort();
 const design=(kind,files)=>files.map(file=>{const path=`docs/${kind}/${file}`;const all=(kind==="adr"&&file==="006.md")||(kind==="ddd"&&file.startsWith("04-"));return {path,title:readFileSync(path,"utf8").split("\n")[0].replace(/^#\s*/,""),sha256:hash(path),crate_manifest_paths:all?manifests:[service],implementation_paths:["crates/blastglass-service/src/app.rs"],test_paths:["crates/blastglass-service/tests/behavior.rs"]}});
 const adrDocs=design("adr",adrs),dddDocs=design("ddd",ddds); const allAdr=adrDocs.map(x=>x.path),allDdd=dddDocs.map(x=>x.path);
