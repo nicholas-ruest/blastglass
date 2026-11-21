@@ -1,0 +1,7 @@
+.dm-private/
+target/
+**/node_modules/
+frontend/dist/
+playwright-report/
+test-results/
+*.tsbuildinfo
